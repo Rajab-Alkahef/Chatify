@@ -19,7 +19,9 @@ class LoginScreen extends StatelessWidget {
                 height: MediaQuery.of(context).size.height / 15,
               ),
               Image.asset(
-                'assets/icons/chat_app_logo_dark-03.png',
+                MediaQuery.of(context).platformBrightness == Brightness.light
+                    ? 'assets/icons/chat_app_logo_light-03.png'
+                    : 'assets/icons/chat_app_logo_dark-03.png',
                 // width: 100,
                 height: MediaQuery.of(context).size.width / 2.5,
               ),

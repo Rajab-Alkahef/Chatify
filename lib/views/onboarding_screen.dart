@@ -14,7 +14,7 @@ class onBoardingScreen extends StatelessWidget {
         child: Column(
           children: [
             const Spacer(),
-            Image.asset('assets/images/onboarding.png'),
+            Image.asset('assets/images/onboarding-01.png'),
             const Spacer(),
             Text(
               textAlign: TextAlign.center,
