@@ -1,5 +1,6 @@
 import 'package:chat_app_new/constants.dart';
 import 'package:chat_app_new/views/register_screen.dart';
+import 'package:chat_app_new/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -8,25 +9,53 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: [
-          Image.asset('assets/icons/chat_app_logo_sec_dark.png'),
-          const TextField(),
-          const TextField(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+              vertical: kDefaultPadding / 3, horizontal: kDefaultPadding / 2),
+          child: ListView(
             children: [
-              const Text("Don't have an account?"),
-              GestureDetector(
-                onTap: () => Navigator.pushNamed(context, RegisterScreen.id),
-                child: const Text(
-                  "  Register",
-                  style: TextStyle(color: kPrimaryColor),
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 15,
+              ),
+              Image.asset(
+                'assets/icons/chat_app_logo_dark-03.png',
+                // width: 100,
+                height: MediaQuery.of(context).size.width / 2.5,
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 15,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: Text(
+                  'Login',
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
-              )
+              ),
+              const customTextField(
+                hintText: 'Email',
+              ),
+              const customTextField(
+                hintText: 'Password',
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Don't have an account?"),
+                  GestureDetector(
+                    onTap: () =>
+                        Navigator.pushNamed(context, RegisterScreen.id),
+                    child: const Text(
+                      "  Register",
+                      style: TextStyle(color: kPrimaryColor),
+                    ),
+                  )
+                ],
+              ),
             ],
-          )
-        ],
+          ),
+        ),
       ),
     );
   }
