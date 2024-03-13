@@ -1,4 +1,5 @@
 import 'package:chat_app_new/constants.dart';
+import 'package:chat_app_new/views/home_screend.dart';
 import 'package:chat_app_new/widgets/custom_button.dart';
 import 'package:chat_app_new/widgets/custom_text_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -103,6 +104,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             isLoading = false;
                             setState(() {});
                             snackbar(context, 'Success');
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const HomeScreen()),
+                            );
                             await updateUsername(credential, username!);
                           } on FirebaseAuthException catch (e) {
                             if (e.code == 'weak-password') {
@@ -153,13 +159,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  void snackbar(BuildContext context, String message) {
-    // String message;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
     );
   }
 
