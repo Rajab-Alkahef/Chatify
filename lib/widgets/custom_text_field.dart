@@ -2,12 +2,13 @@ import 'package:chat_app_new/constants.dart';
 import 'package:flutter/material.dart';
 
 class customTextField extends StatelessWidget {
-  const customTextField({
+  customTextField({
     super.key,
+    this.onChanged,
     required this.hintText,
   });
   final String hintText;
-
+  Function(String)? onChanged;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -17,6 +18,7 @@ class customTextField extends StatelessWidget {
           vertical: kDefaultPadding / 3,
         ),
         child: TextField(
+          onChanged: onChanged,
           autofillHints: const [AutofillHints.email],
           onTapOutside: (event) {
             FocusScope.of(context).unfocus();

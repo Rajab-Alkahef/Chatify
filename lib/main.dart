@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       routes: {
         onBoardingScreen.id: (context) => const onBoardingScreen(),
         LoginScreen.id: (context) => const LoginScreen(),
-        RegisterScreen.id: (context) => const RegisterScreen(),
+        RegisterScreen.id: (context) => RegisterScreen(),
       },
       theme: lightThemeData(context),
       darkTheme: darkThemeData(context),

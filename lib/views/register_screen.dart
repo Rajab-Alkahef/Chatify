@@ -1,10 +1,14 @@
 import 'package:chat_app_new/constants.dart';
+import 'package:chat_app_new/widgets/custom_button.dart';
 import 'package:chat_app_new/widgets/custom_text_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatelessWidget {
-  const RegisterScreen({super.key});
+  RegisterScreen({super.key});
   static String id = 'register_screen';
+  String? email;
+  String? password;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,17 +38,46 @@ class RegisterScreen extends StatelessWidget {
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ),
-              const customTextField(
+              customTextField(
                 hintText: 'Username',
               ),
-              const customTextField(
+              customTextField(
+                onChanged: (data) {
+                  email = data;
+                },
                 hintText: 'Email',
               ),
-              const customTextField(
+              customTextField(
+                onChanged: (data) {
+                  password = data;
+                },
                 hintText: 'Password',
               ),
-              const customTextField(
+              customTextField(
                 hintText: 'Confirm Password',
+              ),
+              CustomButton(
+                onTap: () async {
+                  try {
+                    final credential = await FirebaseAuth.instance
+                        .createUserWithEmailAndPassword(
+                      email: email!,
+                      password: password!,
+                    );
+                    print('-------------');
+                    print(credential.user!.displayName);
+                  } on FirebaseAuthException catch (e) {
+                    if (e.code == 'weak-password') {
+                      print('The password provided is too weak.');
+                    } else if (e.code == 'email-already-in-use') {
+                      print('The account already exists for that email.');
+                    }
+                  } catch (e) {
+                    print(e);
+                  }
+                },
+                color: kSecondaryColor,
+                label: 'Register',
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
