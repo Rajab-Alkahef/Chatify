@@ -37,10 +37,10 @@ class LoginScreen extends StatelessWidget {
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ),
-              customTextField(
+              const customTextField(
                 hintText: 'Email',
               ),
-              customTextField(
+              const customTextField(
                 hintText: 'Password',
               ),
               const CustomButton(
