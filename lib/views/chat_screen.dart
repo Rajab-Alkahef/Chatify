@@ -1,18 +1,20 @@
 import 'package:chat_app_new/constants.dart';
 import 'package:chat_app_new/models/chat_message.dart';
+import 'package:chat_app_new/theme.dart';
+import 'package:chat_app_new/widgets/appbar_chat_screen.dart';
 import 'package:chat_app_new/widgets/chat_bubble.dart';
 import 'package:chat_app_new/widgets/chat_text_field.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
-  static String id = 'home-screen';
+class chatScreen extends StatefulWidget {
+  const chatScreen({super.key});
+  static String id = 'chat-screen';
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<chatScreen> createState() => _chatScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _chatScreenState extends State<chatScreen> {
   final messageCollection =
       FirebaseFirestore.instance.collection(kMessageCollection);
   final controller = ScrollController();
@@ -29,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
               messageList.add(MessageModel.fromJson(snapshot.data!.docs[i]));
             }
             return Scaffold(
+              appBar: AppBarChatScreen(context),
               body: Column(
                 children: [
                   Expanded(

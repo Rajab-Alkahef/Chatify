@@ -29,7 +29,6 @@ class onBoardingScreen extends StatelessWidget {
               textAlign: TextAlign.center,
               'Chat with any body\nin this world',
               style: TextStyle(
-                fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize!,
                 color: Theme.of(context)
                     .textTheme
                     .bodyLarge!

@@ -72,8 +72,7 @@ class _chatTextFieldState extends State<chatTextField> {
                           },
                         );
                         _textController.clear();
-                        widget.controller.animateTo(
-                            widget.controller.position.minScrollExtent,
+                        widget.controller.animateTo(0,
                             duration: const Duration(seconds: 1),
                             curve: Curves.easeOut);
                       },

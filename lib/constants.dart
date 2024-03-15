@@ -9,6 +9,7 @@ const kErrorColor = Color(0xFFF03738);
 const kMessageCollection = 'messagesCollection';
 const kMessage = 'message';
 const kCreatedAt = 'created_at';
+const kUsers = 'Users';
 const kDefaultPadding = 20.0;
 void snackbar(BuildContext context, String message) {
   // String message;

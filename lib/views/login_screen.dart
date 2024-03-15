@@ -1,5 +1,6 @@
 import 'package:chat_app_new/constants.dart';
-import 'package:chat_app_new/views/home_screend.dart';
+import 'package:chat_app_new/views/chat_screen.dart';
+import 'package:chat_app_new/views/home_screen.dart';
 import 'package:chat_app_new/views/register_screen.dart';
 import 'package:chat_app_new/widgets/custom_text_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -84,11 +85,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           isLoading = false;
                           setState(() {});
                           snackbar(context, 'Success');
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const HomeScreen()),
-                          );
+                          Navigator.pushReplacementNamed(context, HomeScreen.id
+                              // MaterialPageRoute(
+                              //     builder: (context) => const HomeScreen()),
+                              );
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'user-not-found') {
                             isLoading = false;
