@@ -1,4 +1,5 @@
 import 'package:chat_app_new/firebase_options.dart';
+import 'package:chat_app_new/views/home_screend.dart';
 import 'package:chat_app_new/views/login_screen.dart';
 import 'package:chat_app_new/views/onboarding_screen.dart';
 import 'package:chat_app_new/views/register_screen.dart';
@@ -25,7 +26,8 @@ class MyApp extends StatelessWidget {
       routes: {
         onBoardingScreen.id: (context) => const onBoardingScreen(),
         LoginScreen.id: (context) => const LoginScreen(),
-        RegisterScreen.id: (context) => RegisterScreen(),
+        RegisterScreen.id: (context) => const RegisterScreen(),
+        HomeScreen.id: (context) => const HomeScreen(),
       },
       theme: lightThemeData(context),
       darkTheme: darkThemeData(context),

@@ -1,11 +1,15 @@
 import 'package:chat_app_new/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class chatTextField extends StatefulWidget {
-  const chatTextField({
+  chatTextField({
+    this.message,
     super.key,
+    required this.controller,
   });
-
+  final ScrollController controller;
+  CollectionReference? message;
   @override
   State<chatTextField> createState() => _chatTextFieldState();
 }
@@ -60,6 +64,19 @@ class _chatTextFieldState extends State<chatTextField> {
                       onPressed: () {}),
                   Expanded(
                     child: TextField(
+                      onSubmitted: (value) {
+                        widget.message!.add(
+                          {
+                            kMessage: value,
+                            kCreatedAt: DateTime.now(),
+                          },
+                        );
+                        _textController.clear();
+                        widget.controller.animateTo(
+                            widget.controller.position.minScrollExtent,
+                            duration: const Duration(seconds: 1),
+                            curve: Curves.easeOut);
+                      },
                       style: const TextStyle(color: Colors.black),
                       onChanged: (value) {
                         _onTextChanged();

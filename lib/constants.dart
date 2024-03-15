@@ -6,7 +6,9 @@ const kContentColorLightTheme = Color(0xFF1D1D35);
 const kContentColorDarkTheme = Color(0xFFF5FCF9);
 const kWarninngColor = Color(0xFFF3BB1C);
 const kErrorColor = Color(0xFFF03738);
-
+const kMessageCollection = 'messagesCollection';
+const kMessage = 'message';
+const kCreatedAt = 'created_at';
 const kDefaultPadding = 20.0;
 void snackbar(BuildContext context, String message) {
   // String message;
