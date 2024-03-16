@@ -3,6 +3,7 @@ import 'package:chat_app_new/views/chat_screen.dart';
 import 'package:chat_app_new/views/home_screen.dart';
 import 'package:chat_app_new/widgets/custom_button.dart';
 import 'package:chat_app_new/widgets/custom_text_field.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -31,6 +32,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final users = FirebaseFirestore.instance.collection(kUsers);
     return ModalProgressHUD(
       color: Colors.black,
       blur: 1,
@@ -105,11 +107,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             isLoading = false;
                             setState(() {});
                             snackbar(context, 'Success');
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const HomeScreen()),
+                            users.add(
+                              {
+                                'email': email,
+                                'username': username,
+                              },
                             );
+                            Navigator.pushReplacementNamed(
+                                context, HomeScreen.id,
+                                arguments: email
+                                // MaterialPageRoute(
+                                //     builder: (context) => const HomeScreen()),
+                                );
                             await updateUsername(credential, username!);
                           } on FirebaseAuthException catch (e) {
                             if (e.code == 'weak-password') {

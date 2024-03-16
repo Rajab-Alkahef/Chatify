@@ -7,9 +7,11 @@ class chatTextField extends StatefulWidget {
     this.message,
     super.key,
     required this.controller,
+    required this.userEmail,
   });
   final ScrollController controller;
   CollectionReference? message;
+  final String userEmail;
   @override
   State<chatTextField> createState() => _chatTextFieldState();
 }
@@ -69,6 +71,7 @@ class _chatTextFieldState extends State<chatTextField> {
                           {
                             kMessage: value,
                             kCreatedAt: DateTime.now(),
+                            'id': widget.userEmail,
                           },
                         );
                         _textController.clear();

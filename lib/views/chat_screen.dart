@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chat_app_new/constants.dart';
 import 'package:chat_app_new/models/chat_message.dart';
 import 'package:chat_app_new/theme.dart';
@@ -20,6 +22,8 @@ class _chatScreenState extends State<chatScreen> {
   final controller = ScrollController();
   @override
   Widget build(BuildContext context) {
+    var userEmail = ModalRoute.of(context)!.settings.arguments as String;
+    log(userEmail);
     return StreamBuilder<QuerySnapshot>(
         stream:
             messageCollection.orderBy(kCreatedAt, descending: true).snapshots(),
@@ -49,6 +53,7 @@ class _chatScreenState extends State<chatScreen> {
                   chatTextField(
                     message: messageCollection,
                     controller: controller,
+                    userEmail: userEmail,
                   ),
                 ],
               ),

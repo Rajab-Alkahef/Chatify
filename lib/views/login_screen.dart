@@ -85,7 +85,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           isLoading = false;
                           setState(() {});
                           snackbar(context, 'Success');
-                          Navigator.pushReplacementNamed(context, HomeScreen.id
+                          Navigator.pushReplacementNamed(context, HomeScreen.id,
+                              arguments: email
                               // MaterialPageRoute(
                               //     builder: (context) => const HomeScreen()),
                               );
