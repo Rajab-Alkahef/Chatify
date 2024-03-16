@@ -1,6 +1,5 @@
 import 'package:chat_app_new/components/snack_bar.dart';
 import 'package:chat_app_new/constants.dart';
-import 'package:chat_app_new/views/chat_screen.dart';
 import 'package:chat_app_new/views/home_screen.dart';
 import 'package:chat_app_new/views/register_screen.dart';
 import 'package:chat_app_new/widgets/custom_text_field.dart';
@@ -77,39 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     hintText: 'Password',
                   ),
                   CustomButton(
-                    onTap: () async {
-                      if (formkey.currentState!.validate()) {
-                        isLoading = true;
-                        setState(() {});
-                        try {
-                          UserCredential credential = await signinUser();
-                          isLoading = false;
-                          setState(() {});
-                          snackbar(context, 'Success');
-                          Navigator.pushReplacementNamed(context, HomeScreen.id,
-                              arguments: email
-                              // MaterialPageRoute(
-                              //     builder: (context) => const HomeScreen()),
-                              );
-                        } on FirebaseAuthException catch (e) {
-                          if (e.code == 'user-not-found') {
-                            isLoading = false;
-                            setState(() {});
-                            snackbar(context, 'User not found');
-                            // print('The password provided is too weak.');
-                          } else if (e.code == 'wrong-password') {
-                            isLoading = false;
-                            setState(() {});
-                            snackbar(context, 'Wrong password');
-
-                            // print('The account already exists for that email.');
-                          }
-                        } catch (e) {
-                          print(e);
-                          snackbar(context, 'Oops There was an error');
-                        }
-                      }
-                    },
+                    onTap: loginValidation,
                     label: 'Log in',
                   ),
                   Row(
@@ -139,5 +106,38 @@ class _LoginScreenState extends State<LoginScreen> {
     final credential = await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email!, password: password!);
     return credential;
+  }
+
+  void loginValidation() async {
+    if (formkey.currentState!.validate()) {
+      isLoading = true;
+      setState(() {});
+      try {
+        UserCredential credential = await signinUser();
+        isLoading = false;
+        setState(() {});
+        snackbar(context, 'Login Successfully');
+        Navigator.pushReplacementNamed(context, HomeScreen.id, arguments: email
+            // MaterialPageRoute(
+            //     builder: (context) => const HomeScreen()),
+            );
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          isLoading = false;
+          setState(() {});
+          snackbar(context, 'User not found');
+          // print('The password provided is too weak.');
+        } else if (e.code == 'wrong-password') {
+          isLoading = false;
+          setState(() {});
+          snackbar(context, 'Wrong password');
+
+          // print('The account already exists for that email.');
+        }
+      } catch (e) {
+        print(e);
+        snackbar(context, 'Oops There was an error');
+      }
+    }
   }
 }

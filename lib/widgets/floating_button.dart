@@ -1,14 +1,15 @@
 import 'package:chat_app_new/components/snack_bar.dart';
 import 'package:chat_app_new/constants.dart';
+import 'package:chat_app_new/models/contacts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class floatingActionButton extends StatefulWidget {
-  const floatingActionButton({
+  floatingActionButton({
+    required contactsList,
     super.key,
   });
-
+  List<ContactsModel>? contactsList;
   @override
   State<floatingActionButton> createState() => _floatingActionButtonState();
 }
@@ -16,6 +17,14 @@ class floatingActionButton extends StatefulWidget {
 class _floatingActionButtonState extends State<floatingActionButton> {
   final TextEditingController _contactNameController = TextEditingController();
   final TextEditingController _contactEmailController = TextEditingController();
+  void addContact(String names, String emails) {
+    final newContact =
+        ContactsModel(name: names, email: emails, lastMessage: '');
+    setState(() {
+      widget.contactsList!.add(newContact);
+    });
+  }
+
   // Future<void> _checkEmailExistence() async {
   //   final email = _contactEmailController.text;
   //   try {
@@ -56,6 +65,7 @@ class _floatingActionButtonState extends State<floatingActionButton> {
     if (!userExistance) {
       snackbar(context, "The email does not exist");
     } else {
+      addContact(contactName, contactEmail);
       snackbar(context, "Contact added");
       print('New contact added: $contactName');
       print('New contact added: $contactEmail');

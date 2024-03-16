@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:chat_app_new/constants.dart';
 import 'package:chat_app_new/models/chat_message.dart';
-import 'package:chat_app_new/theme.dart';
 import 'package:chat_app_new/widgets/appbar_chat_screen.dart';
 import 'package:chat_app_new/widgets/chat_bubble.dart';
 import 'package:chat_app_new/widgets/chat_text_field.dart';
@@ -22,8 +19,11 @@ class _chatScreenState extends State<chatScreen> {
   final controller = ScrollController();
   @override
   Widget build(BuildContext context) {
-    var userEmail = ModalRoute.of(context)!.settings.arguments as String;
-    log(userEmail);
+    List Emails = ModalRoute.of(context)!.settings.arguments as List;
+    String userEmail = Emails[0].toString();
+    String friendEmail = Emails[1].toString();
+    print(userEmail);
+    print(friendEmail);
     return StreamBuilder<QuerySnapshot>(
         stream:
             messageCollection.orderBy(kCreatedAt, descending: true).snapshots(),
@@ -53,7 +53,7 @@ class _chatScreenState extends State<chatScreen> {
                   chatTextField(
                     message: messageCollection,
                     controller: controller,
-                    userEmail: userEmail,
+                    userEmail: 'userEmail[0]',
                   ),
                 ],
               ),
