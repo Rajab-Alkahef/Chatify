@@ -71,7 +71,7 @@ class _chatTextFieldState extends State<chatTextField> {
                           {
                             kMessage: value,
                             kCreatedAt: DateTime.now(),
-                            'id': widget.userEmail,
+                            kUserId: widget.userEmail,
                           },
                         );
                         _textController.clear();

@@ -10,4 +10,6 @@ const kMessageCollection = 'messagesCollection';
 const kMessage = 'message';
 const kCreatedAt = 'created_at';
 const kUsers = 'Users';
+const kContacts = 'Contacts';
+const kUserId = 'id';
 const kDefaultPadding = 20.0;

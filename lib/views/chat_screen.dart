@@ -53,7 +53,7 @@ class _chatScreenState extends State<chatScreen> {
                   chatTextField(
                     message: messageCollection,
                     controller: controller,
-                    userEmail: 'userEmail[0]',
+                    userEmail: userEmail,
                   ),
                 ],
               ),

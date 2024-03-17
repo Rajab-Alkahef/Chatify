@@ -16,15 +16,80 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final contacts = FirebaseFirestore.instance.collection(kContacts);
   List<ContactsModel> contactsList = [];
+
+  @override
+  Widget build(BuildContext context) {
+    var userEmail = ModalRoute.of(context)!.settings.arguments;
+    return Scaffold(
+      floatingActionButton: Container(
+        decoration:
+            const BoxDecoration(shape: BoxShape.circle, color: kPrimaryColor),
+        // color: kPrimaryColor,
+        width: 55.0,
+        height: 55.0,
+        child: RawMaterialButton(
+          shape: const CircleBorder(),
+          elevation: 0.0,
+          child: const Icon(
+            Icons.person_add_alt_rounded,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            _showAddContactDialog(context);
+          },
+        ),
+      ),
+      // floatingActionButton(contactsList: contactsList  ),
+      appBar: appBarhomeScreen(context),
+      body: SafeArea(
+        child: ListView.builder(
+          itemCount: contactsList.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.all(kDefaultPadding / 2),
+              child: GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, chatScreen.id,
+                        arguments: [userEmail, contactsList[index].email]);
+                  },
+                  child: const contactCard()),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
   final TextEditingController _contactNameController = TextEditingController();
   final TextEditingController _contactEmailController = TextEditingController();
   void addContact(String names, String emails) {
-    final newContact =
-        ContactsModel(name: names, email: emails, lastMessage: '');
-    setState(() {
-      contactsList.add(newContact);
-    });
+    final existingContact = contactsList.cast<ContactsModel?>().firstWhere(
+          (contact) => contact?.email == emails,
+          orElse: () => null,
+        );
+
+    if (existingContact != null) {
+      snackbar(context, "Contact already exists");
+      print('Contact already exists');
+    } else {
+      final newContact = ContactsModel(name: names, email: emails);
+      int id = 0;
+      setState(() {
+        contactsList.add(newContact);
+        id = contactsList.indexOf(newContact);
+        contacts.add({
+          "contact Id": id,
+          'user email': ModalRoute.of(context)!.settings.arguments as String,
+          'contact email': emails,
+          'user name': names
+        });
+      });
+      snackbar(context, "Contact added");
+      // print('New contact added: $contactName');
+      // print('New contact added: $contactEmail'); // print("contact List is: ${contactsList[]}");
+    }
   }
 
   Future<bool> checkIfUserExists(String email) async {
@@ -46,9 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
       snackbar(context, "The email does not exist");
     } else {
       addContact(contactName, contactEmail);
-      snackbar(context, "Contact added");
-      print('New contact added: $contactName');
-      print('New contact added: $contactEmail');
+
       Navigator.pop(context); // Close the dialog
       _contactEmailController.clear();
       _contactNameController.clear();
@@ -102,49 +165,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         );
       },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var userEmail = ModalRoute.of(context)!.settings.arguments;
-    return Scaffold(
-      floatingActionButton: Container(
-        decoration:
-            const BoxDecoration(shape: BoxShape.circle, color: kPrimaryColor),
-        // color: kPrimaryColor,
-        width: 55.0,
-        height: 55.0,
-        child: RawMaterialButton(
-          shape: const CircleBorder(),
-          elevation: 0.0,
-          child: const Icon(
-            Icons.person_add_alt_rounded,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            _showAddContactDialog(context);
-          },
-        ),
-      ),
-      // floatingActionButton(contactsList: contactsList  ),
-      appBar: appBarhomeScreen(context),
-      body: SafeArea(
-        child: ListView.builder(
-          itemCount: contactsList.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.all(kDefaultPadding / 2),
-              child: GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, chatScreen.id,
-                        arguments: [userEmail, contactsList[index].email]);
-                  },
-                  child: const contactCard()),
-            );
-          },
-        ),
-      ),
     );
   }
 }

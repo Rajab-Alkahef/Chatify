@@ -35,7 +35,7 @@ AppBar AppBarChatScreen(BuildContext context) {
       ),
       IconButton(
         onPressed: () {},
-        icon: const Icon(Icons.local_phone),
+        icon: const Icon(Icons.videocam_rounded),
       ),
     ],
     shadowColor: Colors.black,

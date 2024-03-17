@@ -1,6 +1,5 @@
 import 'package:chat_app_new/components/snack_bar.dart';
 import 'package:chat_app_new/constants.dart';
-import 'package:chat_app_new/views/chat_screen.dart';
 import 'package:chat_app_new/views/home_screen.dart';
 import 'package:chat_app_new/widgets/custom_button.dart';
 import 'package:chat_app_new/widgets/custom_text_field.dart';
