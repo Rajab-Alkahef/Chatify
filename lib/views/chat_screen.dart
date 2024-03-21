@@ -93,8 +93,15 @@ class _chatScreenState extends State<chatScreen> {
                 ],
               ),
             );
+          } else if (snapshot.hasError) {
+            return const Text('There is an error');
           } else {
-            return const Text('Loading...');
+            return Scaffold(
+              appBar: AppBarChatScreen(context),
+              body: const Center(
+                child: Text('Loading...'),
+              ),
+            );
           }
         });
   }
