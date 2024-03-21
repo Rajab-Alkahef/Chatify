@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chat_app_new/components/snack_bar.dart';
 import 'package:chat_app_new/constants.dart';
 import 'package:chat_app_new/models/contacts.dart';
@@ -5,6 +7,7 @@ import 'package:chat_app_new/views/chat_screen.dart';
 import 'package:chat_app_new/widgets/appbar_home_screen.dart';
 import 'package:chat_app_new/widgets/contact_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -18,10 +21,13 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final contacts = FirebaseFirestore.instance.collection(kContacts);
   List<ContactsModel> contactsList = [];
-
+  final uid = FirebaseAuth.instance.currentUser!.uid;
+  final uemail = FirebaseAuth.instance.currentUser!.email;
   @override
   Widget build(BuildContext context) {
-    var userEmail = ModalRoute.of(context)!.settings.arguments;
+    log(uid);
+    print(uemail);
+
     return Scaffold(
       floatingActionButton: Container(
         decoration:
@@ -51,8 +57,15 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.all(kDefaultPadding / 2),
               child: GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, chatScreen.id,
-                        arguments: [userEmail, contactsList[index].email]);
+                    Navigator.pushNamed(
+                      context,
+                      chatScreen.id,
+                      arguments: [
+                        uemail,
+                        contactsList[index].email,
+                        contactsList[index].contactId
+                      ],
+                    );
                   },
                   child: const contactCard()),
             );
@@ -64,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final TextEditingController _contactNameController = TextEditingController();
   final TextEditingController _contactEmailController = TextEditingController();
-  void addContact(String names, String emails) {
+  void addContact(String names, String emails, String userId) {
     final existingContact = contactsList.cast<ContactsModel?>().firstWhere(
           (contact) => contact?.email == emails,
           orElse: () => null,
@@ -74,16 +87,19 @@ class _HomeScreenState extends State<HomeScreen> {
       snackbar(context, "Contact already exists");
       print('Contact already exists');
     } else {
-      final newContact = ContactsModel(name: names, email: emails);
+      final newContact =
+          ContactsModel(name: names, email: emails, contactId: userId);
       int id = 0;
       setState(() {
         contactsList.add(newContact);
         id = contactsList.indexOf(newContact);
         contacts.add({
-          "contact Id": id,
-          'user email': ModalRoute.of(context)!.settings.arguments as String,
+          "contacting Id": id,
+          'user email': uemail,
+          'user id': uid,
           'contact email': emails,
-          'user name': names
+          'contact name': names,
+          'contact id': userId,
         });
       });
       snackbar(context, "Contact added");
@@ -92,32 +108,41 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<bool> checkIfUserExists(String email) async {
-    final QuerySnapshot result = await FirebaseFirestore.instance
-        .collection('Users')
-        .where('email', isEqualTo: email)
-        .limit(1)
-        .get();
-
-    final List<DocumentSnapshot> documents = result.docs;
-    return documents.length == 1;
-  }
-
   void onSubmit() async {
     final contactEmail = _contactEmailController.text;
     final contactName = _contactNameController.text;
-    bool userExistance = await checkIfUserExists(contactEmail);
-    if (!userExistance) {
-      snackbar(context, "The email does not exist");
-    } else {
-      addContact(contactName, contactEmail);
 
-      Navigator.pop(context); // Close the dialog
-      _contactEmailController.clear();
-      _contactNameController.clear();
+    if (contactEmail == uemail) {
+      snackbar(context, "You can't add yourself");
+    } else {
+      try {
+        final querySnapshot = await FirebaseFirestore.instance
+            .collection('Users')
+            .where('email', isEqualTo: contactEmail)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          // Assuming each user has a unique email, we'll take the first result
+          final userDoc = querySnapshot.docs.first;
+          print(userDoc);
+          final userId = userDoc['uid'];
+          print("User ID is :$userId");
+          addContact(contactName, contactEmail, userId);
+
+          Navigator.pop(context); // Close the dialog
+          _contactEmailController.clear();
+          _contactNameController.clear();
+        } else {
+          print('User with email $contactEmail not found.');
+          snackbar(context, "The email does not exist");
+        }
+      } catch (e) {
+        print('Error fetching user: $e');
+        return null;
+      }
+      print('New contact added: $contactName');
+      print('New contact added: $contactEmail');
     }
-    print('New contact added: $contactName');
-    print('New contact added: $contactEmail');
     // Navigator.pop(context); // Close the dialog
   }
 

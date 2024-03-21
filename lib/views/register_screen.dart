@@ -29,7 +29,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool isLoading = false;
 
   GlobalKey<FormState> formkey = GlobalKey();
-
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     final users = FirebaseFirestore.instance.collection(kUsers);
@@ -109,6 +109,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             snackbar(context, 'Success');
                             users.add(
                               {
+                                'uid': _firebaseAuth.currentUser!.uid,
                                 'email': email,
                                 'username': username,
                               },

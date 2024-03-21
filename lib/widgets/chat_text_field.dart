@@ -1,4 +1,5 @@
 import 'package:chat_app_new/constants.dart';
+import 'package:chat_app_new/services/chat_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -8,10 +9,16 @@ class chatTextField extends StatefulWidget {
     super.key,
     required this.controller,
     required this.userEmail,
+    required this.friendEmail,
+    required this.friendId,
+    required this.userId,
   });
   final ScrollController controller;
   CollectionReference? message;
   final String userEmail;
+  final String friendEmail;
+  final String friendId;
+  final String userId;
   @override
   State<chatTextField> createState() => _chatTextFieldState();
 }
@@ -19,6 +26,14 @@ class chatTextField extends StatefulWidget {
 class _chatTextFieldState extends State<chatTextField> {
   final TextEditingController _textController = TextEditingController();
   bool _showSendIcon = false;
+  final chatService _chatservice = chatService();
+  void sendmessage() async {
+    if (_textController.text.isNotEmpty) {
+      await _chatservice.sendmessage(
+          widget.friendId, _textController.text, widget.friendEmail);
+      _textController.clear();
+    }
+  }
 
   @override
   void initState() {
@@ -67,14 +82,15 @@ class _chatTextFieldState extends State<chatTextField> {
                   Expanded(
                     child: TextField(
                       onSubmitted: (value) {
-                        widget.message!.add(
-                          {
-                            kMessage: value,
-                            kCreatedAt: DateTime.now(),
-                            kUserId: widget.userEmail,
-                          },
-                        );
-                        _textController.clear();
+                        // widget.message!.add(
+                        //   {
+                        //     kMessage: value,
+                        //     kCreatedAt: DateTime.now(),
+                        //     kUserId: widget.userEmail,
+                        //   },
+                        // );
+                        // _textController.clear();
+                        sendmessage();
                         widget.controller.animateTo(0,
                             duration: const Duration(seconds: 1),
                             curve: Curves.easeOut);
