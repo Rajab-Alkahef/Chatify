@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:chat_app_new/firebase_options.dart';
 import 'package:chat_app_new/views/chat_screen.dart';
 import 'package:chat_app_new/views/home_screen.dart';
@@ -11,6 +12,8 @@ import 'theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final cameras = await availableCameras();
+  final firstCamera = cameras.first;
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

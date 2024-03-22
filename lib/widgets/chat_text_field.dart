@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:camera/camera.dart';
+import 'package:chat_app_new/components/take_picture.dart';
 import 'package:chat_app_new/constants.dart';
 import 'package:chat_app_new/services/chat_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -109,7 +113,21 @@ class _chatTextFieldState extends State<chatTextField> {
                   IconButton(
                     icon: const Icon(Icons.camera_alt_rounded,
                         color: kPrimaryColor),
-                    onPressed: () {},
+                    onPressed: () async {
+                      // WidgetsFlutterBinding.ensureInitialized();
+                      try {
+                        final cameras = await availableCameras();
+                        final firstCamera = cameras.first;
+                        print("firstCamera: $firstCamera");
+                        TakePictureScreen(
+                          camera: firstCamera,
+                        );
+                      } on CameraException catch (e) {
+                        log(e.code);
+                      }
+
+// Get a specific camera from the list of available cameras (e.g., the first camera).
+                    },
                   ),
                   IconButton(
                     icon: const Icon(Icons.attach_file, color: kPrimaryColor),
@@ -125,6 +143,14 @@ class _chatTextFieldState extends State<chatTextField> {
             decoration: const BoxDecoration(
                 color: kPrimaryColor, shape: BoxShape.circle),
             child: InkWell(
+              onTap: () {
+                if (_showSendIcon) {
+                  sendmessage();
+                  widget.controller.animateTo(0,
+                      duration: const Duration(seconds: 1),
+                      curve: Curves.easeOut);
+                }
+              },
               child: Icon(
                 _showSendIcon ? Icons.send : Icons.keyboard_voice,
                 color: Colors.white,

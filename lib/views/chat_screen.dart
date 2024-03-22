@@ -40,9 +40,7 @@ class _chatScreenState extends State<chatScreen> {
     String friendEmail = data[1].toString();
     String friendId = data[2].toString();
     String userId = FirebaseAuth.instance.currentUser!.uid;
-    print(friendId);
-    print(userEmail);
-    print(friendEmail);
+    String friendName = data[3].toString();
 
     // The StreamBuilder widget listens to the stream of messages from the Firebase Firestore
     // collection and builds the UI based on the received data.
@@ -62,7 +60,7 @@ class _chatScreenState extends State<chatScreen> {
             return Scaffold(
               // The AppBarChatScreen widget is a custom app bar that displays the friend's
               // name and the back button.
-              appBar: AppBarChatScreen(context),
+              appBar: AppBarChatScreen(context, friendName),
               body: Column(
                 children: [
                   // The Expanded widget is a widget that expands its child to fill the available
@@ -97,7 +95,7 @@ class _chatScreenState extends State<chatScreen> {
             return const Text('There is an error');
           } else {
             return Scaffold(
-              appBar: AppBarChatScreen(context),
+              appBar: AppBarChatScreen(context, friendName),
               body: const Center(
                 child: Text('Loading...'),
               ),

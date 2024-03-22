@@ -1,25 +1,25 @@
 import 'package:chat_app_new/constants.dart';
 import 'package:flutter/material.dart';
 
-AppBar AppBarChatScreen(BuildContext context) {
+AppBar AppBarChatScreen(BuildContext context, String name) {
   return AppBar(
-    title: const Row(
+    title: Row(
       children: [
-        CircleAvatar(
+        const CircleAvatar(
           backgroundImage: AssetImage(
             "assets/images/photo.png",
           ),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(
+          padding: const EdgeInsets.symmetric(
               // vertical: kDefaultPadding*2,
               horizontal: kDefaultPadding * 0.75),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             // mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text('Rajab Alkahef', style: TextStyle(fontSize: 16)),
-              Text(
+              Text(name, style: const TextStyle(fontSize: 16)),
+              const Text(
                 'Active 3m ago',
                 style: TextStyle(fontSize: 12),
               ),

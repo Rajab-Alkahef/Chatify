@@ -1,6 +1,7 @@
 import 'package:chat_app_new/constants.dart';
 import 'package:chat_app_new/views/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class onBoardingScreen extends StatelessWidget {
   const onBoardingScreen({
@@ -14,7 +15,7 @@ class onBoardingScreen extends StatelessWidget {
         child: Column(
           children: [
             const Spacer(),
-            Image.asset('assets/images/onboarding-01.png'),
+            Image.asset('assets/images/onboarding-01 (Medium).png'),
             const Spacer(),
             Text(
               textAlign: TextAlign.center,

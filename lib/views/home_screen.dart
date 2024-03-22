@@ -24,10 +24,16 @@ class _HomeScreenState extends State<HomeScreen> {
   final uid = FirebaseAuth.instance.currentUser!.uid;
   final uemail = FirebaseAuth.instance.currentUser!.email;
   @override
-  Widget build(BuildContext context) {
-    log(uid);
-    print(uemail);
+  void initState() {
+    super.initState();
+    getUserContacts();
+  }
 
+  @override
+  Widget build(BuildContext context) {
+    // log(uid);
+    // print(uemail);
+    // print("${contactsList[0].email} + ${contactsList[0].email}");
     return Scaffold(
       floatingActionButton: Container(
         decoration:
@@ -63,11 +69,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       arguments: [
                         uemail,
                         contactsList[index].email,
-                        contactsList[index].contactId
+                        contactsList[index].contactId,
+                        contactsList[index].name,
                       ],
                     );
                   },
-                  child: const contactCard()),
+                  child: contactCard(name: contactsList[index].name!)),
             );
           },
         ),
@@ -105,6 +112,54 @@ class _HomeScreenState extends State<HomeScreen> {
       snackbar(context, "Contact added");
       // print('New contact added: $contactName');
       // print('New contact added: $contactEmail'); // print("contact List is: ${contactsList[]}");
+    }
+  }
+
+  // getContacts() {
+  //   final document = getUserEmail();
+  //   final newContact =
+  //       ContactsModel(name: names, email: emails, contactId: userId);
+  // }
+
+  // Future<String> getUserEmail() async {
+  //   DocumentSnapshot doc =
+  //       await FirebaseFirestore.instance.collection('contacts').doc().get();
+  //   if (FirebaseAuth.instance.currentUser!.email == doc['user email']) {
+  //     return doc['user email'];
+  //   } else {
+  //     return "";
+  //   }
+  // }
+  Future<void> getUserContacts() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userEmail = user.email;
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('Contacts')
+          .where('user email', isEqualTo: userEmail)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        for (var i = 0; i < querySnapshot.docs.length; i++) {
+          final document = querySnapshot.docs.elementAt(i);
+          final contactName = document['contact name'];
+          final contactEmail = document['contact email'];
+          final contactId = document['contact id'];
+          final Contact = ContactsModel(
+              name: contactName, email: contactEmail, contactId: contactId);
+          contactsList.add(Contact);
+          setState(() {});
+          // Retrieve other fields as needed
+
+          print('Contact Name: $contactName');
+          print('Contact Email: $contactEmail');
+        }
+        // Print other fields
+      } else {
+        print('No matching document found.');
+      }
+    } else {
+      print('User not signed in.');
     }
   }
 

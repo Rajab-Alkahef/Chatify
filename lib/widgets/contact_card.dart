@@ -5,8 +5,9 @@ import 'dart:math' as math;
 class contactCard extends StatelessWidget {
   const contactCard({
     super.key,
+    required this.name,
   });
-
+  final String name;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -17,20 +18,22 @@ class contactCard extends StatelessWidget {
               Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
                   .withOpacity(1.0),
         ),
-        const Expanded(
+        Expanded(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: kDefaultPadding / 2),
+            padding:
+                const EdgeInsets.symmetric(horizontal: kDefaultPadding / 2),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "abd almalek",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                  name,
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.w500),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 2,
                 ),
-                Text(
+                const Text(
                   "Lorem ipsum dolor sit amet, consectesaffsdf",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
