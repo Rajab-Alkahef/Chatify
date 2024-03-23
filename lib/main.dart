@@ -4,7 +4,7 @@ import 'package:chat_app_new/views/home_screen.dart';
 import 'package:chat_app_new/views/login_screen.dart';
 import 'package:chat_app_new/views/onboarding_screen.dart';
 import 'package:chat_app_new/views/register_screen.dart';
-import 'package:chat_app_new/widgets/check_first_screen.dart';
+import 'package:chat_app_new/widgets/first_screen_status.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
       darkTheme: darkThemeData(context),
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
-      home: const CheckScreen(),
+      home: const CheckScreen.FirstScreenStatus(),
     );
   }
 

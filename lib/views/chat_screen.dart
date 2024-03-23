@@ -96,7 +96,7 @@ class _chatScreenState extends State<chatScreen> {
             return Scaffold(
               appBar: AppBarChatScreen(context, friendName),
               body: const Center(
-                child: Text('Loading...'),
+                child: CircularProgressIndicator(),
               ),
             );
           }

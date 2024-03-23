@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:chat_app_new/constants.dart';
 import 'package:chat_app_new/services/chat_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
@@ -36,7 +37,7 @@ class _chatTextFieldState extends State<chatTextField> {
     if (_textController.text.isNotEmpty) {
       await _chatservice.sendmessage(
           widget.friendId, _textController.text, widget.friendEmail);
-      _textController.clear();
+      // _textController.clear();
     }
   }
 
@@ -129,24 +130,24 @@ class _chatTextFieldState extends State<chatTextField> {
             ),
           ),
           const SizedBox(width: 15),
-          Container(
-            padding: const EdgeInsets.all(15.0),
-            decoration: const BoxDecoration(
-                color: kPrimaryColor, shape: BoxShape.circle),
-            child: InkWell(
-              onTap: () {
-                if (_showSendIcon) {
-                  sendmessage();
-                  widget.controller.animateTo(0,
-                      duration: const Duration(seconds: 1),
-                      curve: Curves.easeOut);
-                }
-              },
+          GestureDetector(
+            onTap: () {
+              if (_showSendIcon) {
+                sendmessage();
+                widget.controller.animateTo(0,
+                    duration: const Duration(seconds: 1),
+                    curve: Curves.easeOut);
+                _textController.clear();
+              }
+            },
+            child: Container(
+              padding: const EdgeInsets.all(15.0),
+              decoration: const BoxDecoration(
+                  color: kPrimaryColor, shape: BoxShape.circle),
               child: Icon(
                 _showSendIcon ? Icons.send : Icons.keyboard_voice,
                 color: Colors.white,
               ),
-              onLongPress: () {},
             ),
           )
         ],

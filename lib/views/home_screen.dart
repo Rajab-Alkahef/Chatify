@@ -21,6 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<ContactsModel> contactsList = [];
   final uid = FirebaseAuth.instance.currentUser!.uid;
   final uemail = FirebaseAuth.instance.currentUser!.email;
+  bool isLoading = true;
   @override
   void initState() {
     super.initState();
@@ -54,28 +55,32 @@ class _HomeScreenState extends State<HomeScreen> {
       // floatingActionButton(contactsList: contactsList  ),
       appBar: appBarhomeScreen(context),
       body: SafeArea(
-        child: ListView.builder(
-          itemCount: contactsList.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.all(kDefaultPadding / 2),
-              child: GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      chatScreen.id,
-                      arguments: [
-                        uemail,
-                        contactsList[index].email,
-                        contactsList[index].contactId,
-                        contactsList[index].name,
-                      ],
-                    );
-                  },
-                  child: contactCard(name: contactsList[index].name!)),
-            );
-          },
-        ),
+        child: isLoading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : ListView.builder(
+                itemCount: contactsList.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(kDefaultPadding / 2),
+                    child: GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            chatScreen.id,
+                            arguments: [
+                              uemail,
+                              contactsList[index].email,
+                              contactsList[index].contactId,
+                              contactsList[index].name,
+                            ],
+                          );
+                        },
+                        child: contactCard(name: contactsList[index].name!)),
+                  );
+                },
+              ),
       ),
     );
   }
@@ -151,6 +156,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
           print('Contact Name: $contactName');
           print('Contact Email: $contactEmail');
+
+          setState(() {
+            isLoading = false;
+          });
         }
         // Print other fields
       } else {

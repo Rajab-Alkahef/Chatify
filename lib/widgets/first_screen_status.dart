@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class CheckScreen extends StatelessWidget {
-  const CheckScreen({super.key});
+  const CheckScreen.FirstScreenStatus({super.key});
 
   @override
   Widget build(BuildContext context) {
