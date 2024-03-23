@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:chat_app_new/components/snack_bar.dart';
 import 'package:chat_app_new/constants.dart';
 import 'package:chat_app_new/models/contacts.dart';

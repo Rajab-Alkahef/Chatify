@@ -1,11 +1,11 @@
-import 'dart:developer';
+import 'dart:io';
 
-import 'package:camera/camera.dart';
-import 'package:chat_app_new/components/take_picture.dart';
 import 'package:chat_app_new/constants.dart';
 import 'package:chat_app_new/services/chat_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
 
 class chatTextField extends StatefulWidget {
   chatTextField({
@@ -30,6 +30,7 @@ class chatTextField extends StatefulWidget {
 class _chatTextFieldState extends State<chatTextField> {
   final TextEditingController _textController = TextEditingController();
   bool _showSendIcon = false;
+  File? _image;
   final chatService _chatservice = chatService();
   void sendmessage() async {
     if (_textController.text.isNotEmpty) {
@@ -114,24 +115,14 @@ class _chatTextFieldState extends State<chatTextField> {
                     icon: const Icon(Icons.camera_alt_rounded,
                         color: kPrimaryColor),
                     onPressed: () async {
-                      // WidgetsFlutterBinding.ensureInitialized();
-                      try {
-                        final cameras = await availableCameras();
-                        final firstCamera = cameras.first;
-                        print("firstCamera: $firstCamera");
-                        TakePictureScreen(
-                          camera: firstCamera,
-                        );
-                      } on CameraException catch (e) {
-                        log(e.code);
-                      }
-
-// Get a specific camera from the list of available cameras (e.g., the first camera).
+                      _pickImageFromCamera();
                     },
                   ),
                   IconButton(
                     icon: const Icon(Icons.attach_file, color: kPrimaryColor),
-                    onPressed: () {},
+                    onPressed: () {
+                      _pickImageFromGallery();
+                    },
                   )
                 ],
               ),
@@ -160,6 +151,135 @@ class _chatTextFieldState extends State<chatTextField> {
           )
         ],
       ),
+    );
+  }
+
+  Future _pickImageFromGallery() async {
+    final returnedImage = await ImagePicker().pickMedia();
+    if (returnedImage == null) return;
+    setState(() {
+      _image = File(returnedImage.path);
+    });
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Container(
+          alignment: Alignment.center,
+          height: MediaQuery.of(context).size.height * 0.5,
+          child: _image != null
+              ? Padding(
+                  padding: const EdgeInsets.all(kDefaultPadding),
+                  child: Column(
+                    children: [
+                      const Spacer(),
+                      Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: FileImage(_image!),
+                            fit: BoxFit.cover,
+                          ),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(16),
+                          ),
+                        ),
+                        height: 400,
+                        width: 400,
+                        // child: Image.file(_image!),
+                      ),
+                      const SizedBox(
+                        height: kDefaultPadding,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              fixedSize: const Size(100, 50),
+                              foregroundColor: Colors.white,
+                              backgroundColor: kPrimaryColor,
+                              shape: const CircleBorder(),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Icon(Icons.check),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                    ],
+                  ),
+                )
+              : Container(
+                  child: const Text('please select an image'),
+                ),
+        );
+      },
+    );
+  }
+
+  Future _pickImageFromCamera() async {
+    final returnedImage =
+        await ImagePicker().pickImage(source: ImageSource.camera);
+    if (returnedImage == null) return;
+    setState(() {
+      _image = File(returnedImage.path);
+    });
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Container(
+          alignment: Alignment.center,
+          height: MediaQuery.of(context).size.height * 0.5,
+          child: _image != null
+              ? Padding(
+                  padding: const EdgeInsets.all(kDefaultPadding),
+                  child: Column(
+                    children: [
+                      const Spacer(),
+                      Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: FileImage(_image!),
+                            fit: BoxFit.cover,
+                          ),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(16),
+                          ),
+                        ),
+                        height: 400,
+                        width: 400,
+                        // child: Image.file(_image!),
+                      ),
+                      const SizedBox(
+                        height: kDefaultPadding,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              fixedSize: const Size(100, 50),
+                              foregroundColor: Colors.white,
+                              backgroundColor: kPrimaryColor,
+                              shape: const CircleBorder(),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Icon(Icons.check),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                    ],
+                  ),
+                )
+              : Container(
+                  child: const Text('please select an image'),
+                ),
+        );
+      },
     );
   }
 }
