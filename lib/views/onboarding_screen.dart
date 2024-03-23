@@ -1,5 +1,6 @@
 import 'package:chat_app_new/constants.dart';
 import 'package:chat_app_new/views/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
@@ -45,6 +46,12 @@ class onBoardingScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: kDefaultPadding),
               child: TextButton(
                 onPressed: () {
+                  // FirebaseAuth.instance.authStateChanges().listen((User? user) {
+                  //   if (user != null) {
+                  //     print(user.uid);
+                  //     print(user.email);
+                  //   }
+                  // });
                   Navigator.pushNamed(context, LoginScreen.id);
                 },
                 child: Row(
