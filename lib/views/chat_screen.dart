@@ -1,4 +1,6 @@
+import 'package:chat_app_new/components/snack_bar.dart';
 import 'package:chat_app_new/constants.dart';
+import 'package:chat_app_new/models/contacts.dart';
 import 'package:chat_app_new/services/chat_services.dart';
 import 'package:chat_app_new/widgets/appbar_chat_screen.dart';
 import 'package:chat_app_new/widgets/chat_bubble.dart';
@@ -21,6 +23,7 @@ class chatScreen extends StatefulWidget {
 class _chatScreenState extends State<chatScreen> {
   // messageCollection is a final variable that holds a reference to the 'messagesCollection'
   // collection in Firebase Firestore.
+
   final messageCollection =
       FirebaseFirestore.instance.collection(kMessageCollection);
 
@@ -44,62 +47,63 @@ class _chatScreenState extends State<chatScreen> {
     // The StreamBuilder widget listens to the stream of messages from the Firebase Firestore
     // collection and builds the UI based on the received data.
     return StreamBuilder(
-        // The stream is a reference to the 'messagesCollection' collection in Firebase Firestore,
-        // ordered by the 'created_at' field in descending order.
-        stream: _chatService.getmessages(userId, friendId),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            // messageList is a list of MessageModel instances that are created from the
-            // received data.
-            // List<MessageModel> messageList = [];
-            // for (int i = 0; i < snapshot.data!.docs.length; i++) {
-            //   messageList.add(MessageModel.fromJson(snapshot.data!.docs[i]));
-            // }
+      // The stream is a reference to the 'messagesCollection' collection in Firebase Firestore,
+      // ordered by the 'created_at' field in descending order.
+      stream: _chatService.getmessages(userId, friendId),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          // messageList is a list of MessageModel instances that are created from the
+          // received data.
+          // List<MessageModel> messageList = [];
+          // for (int i = 0; i < snapshot.data!.docs.length; i++) {
+          //   messageList.add(MessageModel.fromJson(snapshot.data!.docs[i]));
+          // }
 
-            return Scaffold(
-              // The AppBarChatScreen widget is a custom app bar that displays the friend's
-              // name and the back button.
-              appBar: AppBarChatScreen(context, friendName),
-              body: Column(
-                children: [
-                  // The Expanded widget is a widget that expands its child to fill the available
-                  // space in the main axis (vertical axis in this case).
-                  Expanded(
-                    child: ListView(
-                      // The controller is used to control the scroll position of the ListView.
-                      controller: controller,
-                      // The reverse property is set to true to display the messages in reverse
-                      // chronological order.
-                      reverse: true,
-                      // The itemCount is the number of items in the messageList.
-
-                      // The itemBuilder is a callback function that builds each item in the ListView.
-                      children: snapshot.data!.docs
-                          .map((document) => chatBubble(document))
-                          .toList(),
-                    ),
-                  ),
-                  chatTextField(
-                    message: messageCollection,
+          return Scaffold(
+            // The AppBarChatScreen widget is a custom app bar that displays the friend's
+            // name and the back button.
+            appBar: AppBarChatScreen(context, friendName),
+            body: Column(
+              children: [
+                // The Expanded widget is a widget that expands its child to fill the available
+                // space in the main axis (vertical axis in this case).
+                Expanded(
+                  child: ListView(
+                    // The controller is used to control the scroll position of the ListView.
                     controller: controller,
-                    userEmail: userEmail,
-                    friendEmail: friendEmail,
-                    friendId: friendId,
-                    userId: userId,
+                    // The reverse property is set to true to display the messages in reverse
+                    // chronological order.
+                    reverse: true,
+                    // The itemCount is the number of items in the messageList.
+
+                    // The itemBuilder is a callback function that builds each item in the ListView.
+                    children: snapshot.data!.docs
+                        .map((document) => chatBubble(document))
+                        .toList(),
                   ),
-                ],
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return const Text('There is an error');
-          } else {
-            return Scaffold(
-              appBar: AppBarChatScreen(context, friendName),
-              body: const Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-        });
+                ),
+                chatTextField(
+                  message: messageCollection,
+                  controller: controller,
+                  userEmail: userEmail,
+                  friendEmail: friendEmail,
+                  friendId: friendId,
+                  userId: userId,
+                ),
+              ],
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return const Text('There is an error');
+        } else {
+          return Scaffold(
+            appBar: AppBarChatScreen(context, friendName),
+            body: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+      },
+    );
   }
 }

@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:chat_app_new/constants.dart';
+import 'package:chat_app_new/models/contacts.dart';
 import 'package:chat_app_new/services/chat_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -29,12 +31,19 @@ class chatTextField extends StatefulWidget {
 }
 
 class _chatTextFieldState extends State<chatTextField> {
+  List<ContactsModel> contactsfriendList = [];
   final TextEditingController _textController = TextEditingController();
   bool _showSendIcon = false;
   File? _image;
   final chatService _chatservice = chatService();
+  final contacts = FirebaseFirestore.instance.collection(kContacts);
+  final uid = FirebaseAuth.instance.currentUser!.uid;
+  final uemail = FirebaseAuth.instance.currentUser!.email;
+  final uname = FirebaseAuth.instance.currentUser!.displayName!;
   void sendmessage() async {
     if (_textController.text.isNotEmpty) {
+      getUserContacts();
+      addContact(uname, uemail!, uid);
       await _chatservice.sendmessage(
           widget.friendId, _textController.text, widget.friendEmail);
       // _textController.clear();
@@ -282,5 +291,78 @@ class _chatTextFieldState extends State<chatTextField> {
         );
       },
     );
+  }
+
+  void addContact(String names, String emails, String userId) {
+    final existingContact =
+        contactsfriendList.cast<ContactsModel?>().firstWhere(
+              (contact) => contact?.email == emails,
+              orElse: () => null,
+            );
+
+    if (existingContact != null) {
+      // snackbar(context, "Contact already exists");
+      print('Contact already exists');
+    } else {
+      final newContact =
+          ContactsModel(name: uname, email: uemail, contactId: uid);
+      int id = 0;
+      setState(() {
+        contactsfriendList.add(newContact);
+        id = contactsfriendList.indexOf(newContact);
+        contacts.add({
+          // "contacting Id": id,
+          // 'user email': uemail,
+          // 'user id': uid,
+          // 'contact email': emails,
+          // 'contact name': names,
+          // 'contact id': userId,
+          "contacting Id": id,
+          'user email': widget.friendEmail,
+          'user id': widget.friendId,
+          'contact email': uemail,
+          'contact name': uname,
+          'contact id': uid,
+        });
+      });
+      // snackbar(context, "Contact added");
+      print('Contact added');
+      // print('New contact added: $contactName');
+      // print('New contact added: $contactEmail'); // print("contact List is: ${contactsList[]}");
+    }
+  }
+
+  Future<void> getUserContacts() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    // final userEmail = user!.email;
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('Contacts')
+        .where('user email', isEqualTo: widget.friendEmail)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      for (var i = 0; i < querySnapshot.docs.length; i++) {
+        final document = querySnapshot.docs.elementAt(i);
+        final contactName = document['contact name'];
+        final contactEmail = document['contact email'];
+        final contactId = document['contact id'];
+        final Contact = ContactsModel(
+            name: contactName, email: contactEmail, contactId: contactId);
+        contactsfriendList.add(Contact);
+        setState(() {});
+        // Retrieve other fields as needed
+
+        print('Contact Name: $contactName');
+        print('Contact Email: $contactEmail');
+
+        // setState(() {
+        //   isLoading = false;
+        // });
+      }
+      // Print other fields
+    } else {
+      print('No matching document found.');
+    }
   }
 }
